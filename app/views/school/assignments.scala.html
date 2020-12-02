@@ -1,0 +1,86 @@
+@import api.server.Api
+@()
+@dashboard("Homework & Projects") {
+	@*First row*@
+	<div class="row">
+		@*Homework*@
+		<div class="col-lg-auto grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Homework</h4>
+					<table class="table table-hover table-responsive">
+						<thead>
+							<tr>
+								<th>Subject</th>
+								<th>Topic</th>
+								<th>Date Assigned</th>
+								<th>Score</th>
+								<th>Progress</th>
+								<th>Download</th>
+								<th>Upload</th>
+							</tr>
+						</thead>
+						<tbody>
+						@* Format for submission [qid: The ass id, user: Username, file: The answer]*@
+							@for(ass <- Api.assignments){
+								<tr>
+								@if(ass.submitted){
+									<td>@ass.sub</td>
+									<td>@ass.topic</td>
+									<td>@ass.date</td>
+									<td>@ass.score/@ass.max_score</td>
+									<td><label class="badge badge-outline-success">DONE</label></td>
+									<td><button class="btn btn-inverse-primary btn-link" type="button"><a href="@{s"${Api.SERVER}/${ass.ref}"}" download="@ass.file" target="_blank">Download</a></button></td>
+									<td><label class="badge badge-gradient-success">Submitted</label></td>
+								}else{
+									<td>@ass.sub</td>
+									<td>@ass.topic</td>
+									<td>@ass.date</td>
+									<td>@ass.score/@ass.max_score</td>
+									<td><label class="badge badge-outline-danger">Pending</label></td>
+									<td><button class="btn btn-inverse-primary btn-link" type="button"><a href="@{s"${Api.SERVER}/${ass.ref}"}" download="@ass.file" target="_blank">Download</a></button></td>
+									<td><button class="btn btn-primary" data-toggle="modal" data-target="#myModal">Upload</button></td>
+								}
+								</tr>
+									<!-- Button trigger modal -->
+									<!-- Modal -->
+								<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h4 class="modal-title" id="myModalLabel">@ass.topic</h4>
+											</div>
+											<div class="modal-body">
+                                                <form role="form" action="@Api.SUBMIT_ASSIGNMENT" method="post" enctype="multipart/form-data">
+	                                                <div class="form-group" hidden>
+		                                                <input type="text" name="user" hidden value="@Api.user.username">
+		                                                <input type="text" name="qid" hidden value="@ass.id">
+	                                                </div>
+	                                                <div class="form-group">
+		                                                <label>File upload</label>
+		                                                <input type="file" name="file" class="file-upload-default">
+		                                                <div class="input-group col-xs-12">
+			                                                <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Assignment">
+			                                                <span class="input-group-append">
+				                                                <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
+			                                                </span>
+		                                                </div>
+	                                                </div>
+	                                                <div class="modal-footer">
+		                                                <button class="btn btn-primary" type="submit">Submit</button>
+		                                                <button type="button" class="btn btn-light" data-dismiss="modal">Close </button>
+	                                                </div>
+                                                </form>
+											</div>
+										</div><!-- /.modal-content -->
+									</div>
+								</div>
+										<!-- /.modal -->
+								}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+}

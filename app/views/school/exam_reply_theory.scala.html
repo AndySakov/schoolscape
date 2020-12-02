@@ -1,0 +1,18 @@
+@import api.server.Api
+@(code: Int)
+@for(ques <- Api.theory.filter(x => s"${x.stampy}".hashCode == code)){
+	@*TODO: Find out how to render the pdf in the html*@
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6">
+				@*PDF goes here*@
+				<h2>PDF goes here</h2>
+				<span>@ques.date</span>
+			</div>
+			<div class="col-md-6">
+				@*Input elements go here*@
+				<h2>Input elements go here</h2>
+			</div>
+		</div>
+	</div>
+}

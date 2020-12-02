@@ -1,0 +1,29 @@
+﻿{
+  "name": "SchoolScape™",
+  "description": "This is the world's best CBTS",
+  "keywords": [
+    "school",
+    "Play apps",
+    "e-learning",
+    "SchoolScape",
+    "schoolscape"
+  ],
+  "repository": "https://github.com/AndySakov/SchoolScape",
+  "success_url": "/login",
+  "scripts": {
+    "postdeploy": "sbt run"
+  },
+  "formation": {
+    "web": {
+      "quantity": 2,
+      "size": "Performance-M"
+    }
+  },
+  "image": "heroku/scala",
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/scala"
+    }
+  ]
+}

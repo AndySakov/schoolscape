@@ -1,0 +1,36 @@
+@()(implicit flash: Flash)
+@dashboard("Edit your profile"){
+	<div class="alert alert-dismissible alert-secondary @flash.get("notice-type").getOrElse("")" @flash.get("showing").getOrElse("hidden") role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true" size="0.3px">x</span>
+		</button>
+		@flash.get("notice").getOrElse("")
+	</div>
+	<div class="col-lg-6 grid-margin stretch-card mx-auto">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Edit Profile</h4>
+				<p class="card-description"> Edit your profile </p>
+				<form class="forms-sample" action="/editProfile" method="post">
+					<div class="form-group">
+						<label for="exampleInputUsername1">Full Name</label>
+						<input type="text" class="form-control" id="exampleInputUsername1" placeholder="Full Name" name="name">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputUsername1">Username</label>
+						<input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username" name="user">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Password</label>
+						<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="pass">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputConfirmPassword1">Confirm Password</label>
+						<input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password">
+					</div>
+					<button type="submit" class="btn btn-gradient-primary mr-2">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+}

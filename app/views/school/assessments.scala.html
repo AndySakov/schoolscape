@@ -1,0 +1,96 @@
+@import api.server.Api
+@import scala.util.Random
+@()
+@dashboard("Tests & Examinations"){
+	@*First row*@
+	<div class="row">
+		@*Homework*@
+		<div class="col-lg-auto grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Theory Examinations</h4>
+					<table class="table table-hover table-responsive">
+						<thead>
+							<tr>
+								<th>Subject</th>
+								<th>Title</th>
+								<th>Date</th>
+								<th>Term</th>
+								<th>Score</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							@*(sub: String, name: String , term: Int, ref: String, date: String, stampy: Int)*@
+							@for(ass <- Api.theory){
+								<tr>
+									<td>@ass.sub</td>
+									<td><a href="/dashboard/school/exam/theory/reply/@{s"${ass.stampy}".hashCode}" target="_blank">@ass.name</a></td>
+									<td>@ass.date</td>
+									<td>
+									@{ass.term match {
+										case 1 => "First Term"
+										case 2 => "Second Term"
+										case 3 => "Third Term"
+										case _ => "?"
+									}}
+									</td>
+									<td>@ass.score</td>
+									@if(ass.submitted){
+										<td><span class="badge badge-success">Attempted</span></td>
+									} else {
+										<td><span class="badge badge-info">Unattempted</span></td>
+									}
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-auto grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Objective Examinations</h4>
+					<table class="table table-hover table-responsive">
+						<thead>
+							<tr>
+								<th>Subject</th>
+								<th>Title</th>
+								<th>Date</th>
+								<th>Term</th>
+								<th>Score</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							@for(obj <- Api.objective){
+								<tr>
+									<td>@obj.sub</td>
+									<td><a href="/dashboard/school/exam/obj/reply/@{s"${obj.stampy}".hashCode}" target="_blank">@obj.name</a></td>
+									<td>@obj.date</td>
+									<td>
+									@{obj.term match {
+										case 1 => "First Term"
+										case 2 => "Second Term"
+										case 3 => "Third Term"
+										case _ => "?"
+									}}
+									</td>
+									<td>@obj.score</td>
+									@if(obj.submitted){
+										<td><span class="badge badge-success">Attempted</span></td>
+									} else {
+										<td><span class="badge badge-info">Unattempted</span></td>
+									}
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+}

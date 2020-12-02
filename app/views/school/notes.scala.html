@@ -1,0 +1,35 @@
+@import api.server.Api
+@()
+@dashboard("School Notes"){
+	@*First row*@
+	<div class="row">
+		@*Homework*@
+		<div class="col-lg-auto grid-margin stdetch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Notes</h4>
+					<table class="table table-hover table-responsive">
+						<thead>
+							<tr>
+								<th>Subject</th>
+								<th>Topic</th>
+								<th>Date</th>
+								<th>Download</th>
+							</tr>
+						</thead>
+						<tbody>
+						@for(note <- Api.notes){
+							<tr>
+								<td>@note.sub</td>
+								<td>@note.topic</td>
+								<td>@note.date</td>
+								<td><button class="btn btn-primary" type="button"><a href="@{s"${Api.SERVER}/${note.ref}"}" download="@note.file" target="_blank">Download</a></button></td>
+							</tr>
+						}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+}

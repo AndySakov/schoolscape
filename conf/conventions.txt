@@ -1,0 +1,12 @@
+Project has been pivoted -> {
+	OFFLINE-VERSION[
+		1. The ui no longer interacts directly with the server but with a local server that runs alongside/under the ui on the local device
+		2. This local server will refresh['Much like auto-fetch from git origin or gmail sync'] #[ at a preset time ]
+		3. #[all the installation types will be shipped at once, together]
+	]
+
+	ONLINE-VERSION[
+
+	]
+}
+

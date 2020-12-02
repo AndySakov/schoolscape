@@ -1,0 +1,47 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /                           controllers.RenderController.redirect
+
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
+GET     /account/*route             controllers.RenderController.account(route: String)
+#
+GET     /dashboard/school/exam/theory/reply/*stampy         controllers.RenderController.examReplyTheory(stampy: Int)
+#
+GET     /dashboard/school/exam/obj/reply/*stampy         controllers.RenderController.examReplyObjective(stampy: Int)
+#
+GET     /dashboard/school/*path     controllers.RenderController.school(path: String)
+# Add sid validation shit
+GET     /dashboard/*route           controllers.RenderController.dashboard(route: String)
+#
+GET     /error/*err                 controllers.RenderController.error(err: String)
+#
+GET     /success/*msg               controllers.RenderController.success(msg: String)
+#
+GET     /shutdown                   controllers.RenderController.shutdown
+#
+#GET     /signup/success             controllers.RenderController.success
+#
+#GET     /signup/user_exists         controllers.RenderController.user_exists
+#
+#GET     /error                     controllers.RenderController.err404
+#
+#GET     /resource/get/*name         controllers.UDataController.download(name)
+#
+#GET     /terms                      controllers.RenderController.terms
+#
+#GET     /login/failure              controllers.RenderController.authFailed
+
+GET     /*unknown                   controllers.RenderController.notFound(unknown: String)
+
+##POST REQUESTS
+#
+POST    /auth                     controllers.ApiController.login
+
+POST    /create                   controllers.ApiController.signup
+
+POST    /editProfile              controllers.ApiController.editProfile

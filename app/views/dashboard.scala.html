@@ -1,0 +1,184 @@
+@*
+* Dashboard main UI that renders the navbar and sidebar
+*@
+@import api.server.Api
+@(title: String)(content: Html)
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+			<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>@title</title>
+			<!-- plugins:css -->
+		<link rel="stylesheet" href="@routes.Assets.versioned("vendors/mdi/css/materialdesignicons.min.css")">
+		<link rel="stylesheet" href="@routes.Assets.versioned("vendors/css/vendor.bundle.base.css")">
+			<!-- endinject -->
+			<!-- Plugin css for this page -->
+			<!-- End plugin css for this page -->
+			<!-- inject:css -->
+			<!-- endinject -->
+			<!-- Layout styles -->
+		<link rel="stylesheet" href="@routes.Assets.versioned("css/style.css")">
+			<!-- End layout styles -->
+		<link rel="shortcut icon" href="@routes.Assets.versioned("img/favicon.png")" />
+	</head>
+	<body>
+		<div class="container-scroller">
+            @*<!-- Navbar element -> partials/_navbar.html -->*@
+			<nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+				<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+					<a class="navbar-brand brand-logo"><img src="@routes.Assets.versioned("img/logo.svg")" alt="logo" /></a>
+					<a class="navbar-brand brand-logo-mini"><img src="@routes.Assets.versioned("img/logo-mini.svg")" alt="logo" /></a>
+				</div>
+				<div class="navbar-menu-wrapper d-flex align-items-stretch">
+					<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+						<span class="mdi mdi-menu"></span>
+					</button>
+					<ul class="navbar-nav navbar-nav-right">
+						<li class="nav-item dropdown">
+							<a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+								<i class="mdi mdi-email-outline"></i>
+								<span class="count-symbol bg-warning"></span>
+							</a>
+							<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
+								@*TODO: Add automatic rendering of messages*@
+								<h6 class="p-3 mb-0">Messages</h6>
+								<h6 class="p-3 mb-0 text-center">10 billion new messages</h6>
+							</div>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+								<i class="mdi mdi-bell-outline"></i>
+								<span class="count-symbol bg-gradient-primary"></span>
+							</a>
+							<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+								@*TODO: Add automatic rendering of notifications*@
+								<h6 class="p-3 mb-0">Notifications</h6>
+								<h6 class="p-3 mb-0 text-center">10 billion notifications</h6>
+							</div>
+						</li>
+						<li class="nav-item nav-logout d-none d-lg-block">
+							<a class="nav-link" href="/account/logout">
+								<i class="mdi mdi-logout"></i>
+							</a>
+						</li>
+						<li class="nav-item d-none d-lg-block">
+							<a class="nav-link" href="/shutdown">
+								<i class="mdi mdi-power"></i>
+							</a>
+						</li>
+					</ul>
+					<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+						<span class="mdi mdi-menu"></span>
+					</button>
+				</div>
+			</nav>
+			<div class="container-fluid page-body-wrapper">
+				@*<!-- Sidebar element -> partials/_sidebar.html -->*@
+				<nav class="sidebar sidebar-offcanvas" id="sidebar">
+					<ul class="nav">
+						<li class="nav-item nav-profile">
+							<a href="#" class="nav-link">
+								<div class="nav-profile-image">
+									<img src="@routes.Assets.versioned("img/faces/face1.jpg")" alt="profile">
+									<span class="login-status online"></span>
+										<!--change to offline or busy as needed-->
+								</div>
+								<div class="nav-profile-text d-flex flex-column">
+									<span class="font-weight-bold mb-2">@Api.user.fullname</span>
+									<span class="text-secondary text-small">@Api.user._class Student</span>
+								</div>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/dashboard/home">
+								<span class="menu-title">Dashboard</span>
+								<i class="mdi mdi-home menu-icon"></i>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/account/profile">
+								<span class="menu-title">Profile</span>
+								<i class="mdi mdi-account menu-icon"></i>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" data-toggle="collapse" href="#categories" aria-expanded="false" aria-controls="ui-basic">
+								<span class="menu-title">School Work</span>
+								<i class="menu-arrow"></i>
+								<i class="mdi mdi-school menu-icon"></i>
+							</a>
+							<div class="collapse" id="categories">
+								<ul class="nav flex-column sub-menu">
+									<li class="nav-item"> <a class="nav-link" href="/dashboard/school/notes">Notes</a></li>
+									<li class="nav-item"> <a class="nav-link" href="/dashboard/school/classwork">Class Exercises</a></li>
+									<li class="nav-item"> <a class="nav-link" href="/dashboard/school/assignments">Homework & Projects</a></li>
+									<li class="nav-item"> <a class="nav-link" href="/dashboard/school/assessments">Tests & Examinations</a></li>
+								</ul>
+							</div>
+						</li>
+						<li class="nav-item">
+
+						</li>
+					</ul>
+				</nav>
+					<!-- partial -->
+				<div class="main-panel">
+					@*Content Wrapper*@
+					<div class="content-wrapper align-content-xl-stretch list-group-horizontal-xl">
+						@content
+					</div>
+						<!-- content-wrapper ends -->
+						@*<!-- Footer element partials/_footer.html -->*@
+					<footer class="footer">
+						<div class="d-sm-flex justify-content-center justify-content-sm-between">                                                                         @*Chamge this ref to  ShiftIO main website*@
+							<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright &copy; @Api.THIS_YEAR <a href="https://www.bootstrapdash.com/" style="color: rgb(146,47,255);" target="_blank">ShiftIO</a>. All rights reserved.</span>
+						</div>
+					</footer>
+						<!-- partial -->
+				</div>
+					<!-- main-panel ends -->
+			</div>
+				<!-- page-body-wrapper ends -->
+		</div>
+			<!-- container-scroller -->
+			<!-- plugins:js -->
+		<script src="@routes.Assets.versioned("vendors/js/vendor.bundle.base.js")"></script>
+			<!-- endinject -->
+			<!-- Plugin js for this page -->
+		<script src="@routes.Assets.versioned("vendors/chart.js/Chart.min.js")"></script>
+			<!-- End plugin js for this page -->
+			<!-- inject:js -->
+		<script src="@routes.Assets.versioned("js/off-canvas.js")"></script>
+		<script src="@routes.Assets.versioned("js/hoverable-collapse.js")"></script>
+		<script src="@routes.Assets.versioned("js/misc.js")"></script>
+			<!-- endinject -->
+			<!-- Custom js for this page -->
+		<script src="@routes.Assets.versioned("js/dashboard.js")"></script>
+		<script src="@routes.Assets.versioned("js/socket.io.js")"></script>
+@*		<script src="@routes.Assets.versioned("js/socket.js")"></script>*@
+		<script src="@routes.Assets.versioned("js/todolist.js")"></script>
+		<script src="@routes.Assets.versioned("js/file-upload.js")"></script>
+		@*TODO: Fix CORS error problem*@
+@*		<script>*@
+@*				const socket = io(`@Api.SERVER`);*@
+@*				const user = `@Api.user.username`;*@
+
+@*				socket.on('connect', function() {*@
+@*					console.log( "Connected..." );*@
+@*					socket.emit('join', user)*@
+@*				});*@
+
+@*				socket.on( 'disconnect', function() {*@
+@*					console.log( "Disconnected..." );*@
+@*				} );*@
+
+
+@*				socket.on( 'notify', function(data) {*@
+@*					pushNotify( data.title, data.msg );*@
+@*				});*@
+@*		</script>*@
+			<!-- End custom js for this page -->
+	</body>
+</html>

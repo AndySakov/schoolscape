@@ -1,0 +1,8 @@
+# ~/.gitignore
+.metals/
+.bloop/
+.idea/
+.vscode/
+lib/
+project/metals.sbt
+/target

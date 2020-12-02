@@ -1,0 +1,102 @@
+@()(implicit flash: Flash)
+@import api.server.Api
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+			<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>@Api.NAME Signup</title>
+			<!-- plugins:css -->
+		<link rel="stylesheet" href="@routes.Assets.versioned("vendors/mdi/css/materialdesignicons.min.css")">
+		<link rel="stylesheet" href="@routes.Assets.versioned("vendors/css/vendor.bundle.base.css")">
+			<!-- endinject -->
+			<!-- Plugin css for this page -->
+			<!-- End plugin css for this page -->
+			<!-- inject:css -->
+			<!-- endinject -->
+			<!-- Layout styles -->
+		<link rel="stylesheet" href="@routes.Assets.versioned("css/style.css")">
+			<!-- End layout styles -->
+		<link rel="shortcut icon" href="@routes.Assets.versioned("img/favicon.png")"/>
+	</head>
+	<body>
+		<div class="container-scroller">
+			<div class="container-fluid page-body-wrapper full-page-wrapper">
+				<div class="content-wrapper d-flex align-items-center auth">
+					<div class="row flex-grow">
+						<div class="col-lg-4 mx-auto">
+							<div class="auth-form-light text-left p-5">
+								<div class="brand-logo">
+									<img src="@routes.Assets.versioned("img/logo.svg")">
+								</div>
+								<h4>New here?</h4>
+								<h6 class="font-weight-light">Signing up is easy. It only takes a few steps</h6>
+								<div class="alert alert-dismissible alert-secondary @flash.get("notice-type").getOrElse("")" @flash.get("showing").getOrElse("hidden") role="alert">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true" size="1px">x</span>
+									</button>
+									@flash.get("notice").getOrElse("")
+								</div>
+								<form class="pt-3" action="/create" method="POST">
+									<div class="form-group">
+										<input type="text" class="form-control form-control-lg" name="full" placeholder="Full Name" required>
+									</div>
+									<div class="form-group">
+										<input type="text" class="form-control form-control-lg" name="user" placeholder="Username" required>
+									</div>
+									<div class="form-group">
+										<input type="email" class="form-control form-control-lg" name="email" placeholder="Email Address" required>
+									</div>
+									<div class="form-group">
+										<select class="form-control form-control-lg" name="class" required>
+											<option class="text-md-center">Class</option>
+											<option class="text-md-center">JSS1</option>
+											<option class="text-md-center">JSS2</option>
+											<option class="text-md-center">JSS3</option>
+											<option class="text-md-center">SS1</option>
+											<option class="text-md-center">SS2</option>
+											<option class="text-md-center">SS3</option>
+										</select>
+									</div>
+									<div class="form-group">
+										<input type="password" class="form-control form-control-lg" name="pass" placeholder="Password" required>
+									</div>
+									<div class="mb-4">
+										<div class="form-check">
+											<label class="form-check-label text-muted">
+												<input type="checkbox" class="form-check-input" id="agree" onclick="hate()"> I agree to all Terms & Conditions </label>
+										</div>
+									</div>
+									<div class="mt-3">
+										<button class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn" id="btn-submit" type="submit" disabled>SIGN UP</button>
+									</div>
+									<div class="text-center mt-4 font-weight-light"> Already have an account? <a href="/account/login" class="text-primary">Login</a>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+					<!-- content-wrapper ends -->
+			</div>
+				<!-- page-body-wrapper ends -->
+		</div>
+			<!-- container-scroller -->
+			<!-- plugins:js -->
+		<script src="@routes.Assets.versioned("vendors/js/vendor.bundle.base.js")"></script>
+			<!-- endinject -->
+			<!-- Plugin js for this page -->
+			<!-- End plugin js for this page -->
+			<!-- inject:js -->
+		<script src="@routes.Assets.versioned("js/off-canvas.js")"></script>
+		<script src="@routes.Assets.versioned("js/hoverable-collapse.js")"></script>
+		<script src="@routes.Assets.versioned("js/misc.js")"></script>
+		<script>
+				function hate(){
+					document.getElementById("btn-submit").disabled = document.getElementById("agree").checked !== true;
+				}
+		</script>
+			<!-- endinject -->
+	</body>
+</html>
