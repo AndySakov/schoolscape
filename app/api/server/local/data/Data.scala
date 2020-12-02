@@ -1,13 +1,13 @@
 package api.server.local.data
 
 import java.nio.file.{Files, NoSuchFileException, Paths, StandardOpenOption}
+import java.util.NoSuchElementException
 
-import api.server.StartMode
-import api.server.StartMode.StartMode
+import com.sun.net.httpserver.Authenticator.Success
+
+import scala.util.Failure
 
 object Data {
-
-  import java.util.NoSuchElementException
 
   /**
     * MorseCode code definition
@@ -44,6 +44,8 @@ object Data {
       "y" -> "_.__", "Y" -> "*_.__",
       "z" -> "__..",  "Z" -> "*__.."
     )
+    def isWord(string: String): Boolean = string.split("").length > 1
+    def isLetter(string: String): Boolean = string.split("").length == 1
 
     /**
       * encode(data: String): String = one letter at a time conversion of the letters
@@ -52,9 +54,6 @@ object Data {
       * @return String representation of the <code>encoder.language.MorseCode</code> code for the param
       */
     def encode(data: String): String = {
-      def isWord(string: String): Boolean = string.split("").length > 1
-      def isLetter(string: String): Boolean = string.split("").length == 1
-
       def wordEncode(s: String): String = s.split("").map(letterEncode).mkString("(", "|", ")")
 
       def letterEncode(s: String): String = {
@@ -77,13 +76,10 @@ object Data {
             s"${dict.getOrElse(s, s)}"
         }
       }
-
-      if(isWord(data)){
-        wordEncode(data)
-      }else if(isLetter(data)){
-        sLetterEncode(data)
-      }else{
-        s"$data"
+      data match {
+        case isWord(data) => wordEncode(data)
+        case isLetter(data) => sLetterEncode(data)
+        case _ => s"$data"
       }
     }
 
@@ -93,52 +89,44 @@ object Data {
       * @return String representation of the english form of the param
       */
     def decode(data: String): String = {
-      def isWord(morse: String): Boolean = morse.split("").contains("|")
-      def isLetter(morse: String): Boolean = !isWord(morse)
-
-
       def letterDecode(m: String): String = {
-        if(m.equals("?")){
-          "."
-        }else if(m.equals("~")){
-          "_"
-        }else if(m.equals(";")){
-          " "
-        }else if(m.equals("\t")){
-          "\t"
-        }else{
-          val all = m.split("")
-          val p = all.filterNot(x => x.equals("(")).filterNot(y => y.equals(")")).mkString
-          try {
-            dict.filter(x => x._2 == p).head._1
-          } catch {
-            case _: NoSuchElementException =>
-              println(s"Morse code $m has no english equivalent")
-              m
-          }
+        m match {
+          case "?" => "."
+          case "~" => "_"
+          case ";" => " "
+          case "\t" => "\t"
+          case _ =>
+            val all = m.split("")
+            val p = all.filterNot(x => x.equals("(")).filterNot(y => y.equals(")")).mkString
+            Try(dict.filter(x => x._2 == p).head._1) match {
+              case Success(value) =>
+                value
+              case Failure(exception) => exception match {
+                case _: NoSuchElementException =>
+                  println(s"Morse code $m has no english equivalent")
+                  m
+              }
+            }
+
         }
       }
-
       def pLetterDecode(m: String): String ={
-        if(m.equals("?")){
-          "."
-        }else if(m.equals("~")){
-          "_"
-        }else if(m.equals(";")){
-          " "
-        }else if(m.equals("\t")){
-          "\t"
-        }else{
-          try {
-            dict.filter(x => x._2 == m).head._1
-          } catch {
-            case _: NoSuchElementException =>
-              println(s"Char $m has no english equivalent")
-              m
+        case "?" => "."
+        case "~" => "_"
+        case ";" => " "
+        case "\t" => "\t"
+        case _ =>
+          Try(dict.filter(x => x._2 == m).head._1) match {
+            case Success(value) =>
+              value
+            case Failure(exception) =>
+              exception match {
+                case _:NoSuchElementException =>
+                  println(s"Morse code $m has no english equivalent")
+                  m
+              }
           }
-        }
       }
-
       def wordDecode(m: String): String = {
         val all = m.split("")
         val letters = all.flatMap(x => if(x.equals("|")) " " else x)
@@ -154,13 +142,10 @@ object Data {
         val de = end.flatMap(pLetterDecode).mkString
         de
       }
-
-      if(isLetter(data)){
-        letterDecode(data)
-      }else if(isWord(data)){
-        wordDecode(data)
-      }else{
-        "?"
+      data match {
+        case isLetter(data) => letterDecode(data)
+        case isWord(data) => wordDecode(data)
+        case _ => "?"
       }
     }
   }
@@ -170,30 +155,25 @@ object Data {
   private val NAME_STORE: String = s"$DATA_SOURCE/student/stored-bundles.hex"
   var mode: StartMode = StartMode.OFFLINE
 
-  def saveName(name: String): Unit = {
-    Files.write(Paths.get(NAME_STORE), Morse.encode(name).getBytes, StandardOpenOption.APPEND)
-  }
+  def saveName(name: String): Unit = Files.write(Paths.get(NAME_STORE), Morse.encode(name).getBytes, StandardOpenOption.APPEND)
+
   def user: String = {
-    try{
-      Files.readAllLines(Paths.get(NAME_STORE))
-        .toArray.map(x => {
-        Morse.decode(x.toString)
-      }).head
-    } catch {
-      case x: NoSuchFileException => {
-        Files.createFile(Paths.get(NAME_STORE))
-        "N/A"
-      }
-      case g: NoSuchElementException => {
-        "N/A"
-      }
+    Try(Files.readAllLines(Paths.get(NAME_STORE))
+      .toArray.map(x => {
+      Morse.decode(x.toString)
+    }).head) match {
+      case Success(value) =>
+        value
+      case Failure(exception) =>
+        exception match {
+          case _: NoSuchFileException =>
+            Files.createFile(Paths.get(NAME_STORE))
+            "N/A"
+          case _: NoSuchElementException =>
+            "N/A"
+        }
     }
   }
-  def flushName(): Unit = {
-    Files.write(Paths.get(NAME_STORE), "".getBytes, StandardOpenOption.TRUNCATE_EXISTING)
-  }
-
-  def setMode(mode: StartMode): Unit = {
-    this.mode = mode
-  }
+  def flushName(): Unit = Files.write(Paths.get(NAME_STORE), "".getBytes, StandardOpenOption.TRUNCATE_EXISTING)
+  def setMode(mode: StartMode): Unit = this.mode = mode
 }

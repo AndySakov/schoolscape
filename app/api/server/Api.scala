@@ -2,6 +2,8 @@ package api.server
 
 import java.net.InetAddress
 import java.time.Year
+import java.math.BigInteger
+import java.security.MessageDigest
 
 import api.server.StartMode.StartMode
 import api.server.local.data.Data
@@ -12,9 +14,8 @@ import models.User
 import scala.util.{Failure, Success, Try}
 
 
-class Api {
+class Api
 
-}
 object Api {
 
   var user: User = new User(4, "Johnny Walker", "johnnywalker", "JSS1", "123456")
@@ -24,8 +25,6 @@ object Api {
     io.circe.parser.parse(text).getOrElse(Json.Null)
   }
   private def md5( s: String): String = {
-    import java.math.BigInteger
-    import java.security.MessageDigest
     val md = MessageDigest.getInstance("MD5")
     val digest = md.digest(s.getBytes)
     val bigInt = new BigInteger(1,digest)
@@ -49,7 +48,7 @@ object Api {
   def objective: List[AssessmentObj] = io.circe.parser.decode[List[AssessmentObj]](requests.post(GET_ASSESSMENT_OBJ, data = Map("sid" -> s"${user.id}")).text).getOrElse(List(AssessmentObj("N/A", "N/A", 0, "N/A", "N/A", 0, submitted = false, 0)))
 
   private val API_KEY: String = md5("EhqJ@1jP")
-  val NAME: String = "SchoolScape™ Student"
+  val NAME: String = "SchoolScape Student"
   val THIS_YEAR: String = Year.now.toString
   val SERVER: String = "http://192.168.137.102:3000"
   val AUTH_USER: String = s"$SERVER/student/auth"
@@ -70,8 +69,8 @@ object Api {
     Try{
       requests.get(SERVER)
     } match {
-      case Success(value) => StartMode.ONLINE
-      case Failure(exception) => StartMode.OFFLINE
+      case Success() => StartMode.ONLINE
+      case Failure() => StartMode.OFFLINE
     }
   }
   def initUser(username: String): Unit = {
