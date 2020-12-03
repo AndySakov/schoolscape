@@ -1,12 +1,10 @@
 package api.server
 
-import java.net.InetAddress
-import java.time.Year
 import java.math.BigInteger
+import java.net.InetAddress
 import java.security.MessageDigest
+import java.time.Year
 
-import api.server.StartMode.StartMode
-import api.server.local.data.Data
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.{Decoder, Json}
 import models.User
@@ -65,23 +63,12 @@ object Api {
   lazy val GET_ASSESSMENT_THEORY: String = s"$SERVER/${user._class}/exam-theory"
   lazy val GET_ASSESSMENT_OBJ: String = s"$SERVER/${user._class}/exam-obj"
 
-  def modeDeterminant(): StartMode = {
-    Try{
-      requests.get(SERVER)
-    } match {
-      case Success(value) => StartMode.ONLINE
-      case Failure(exception) => StartMode.OFFLINE
-    }
-  }
+
   def initUser(username: String): Unit = {
     Try(requests.post(Api.USER_DATA, data = Map("user" -> username, "key" -> API_KEY))) match {
       case Failure(exception) => //TODO: Figure out how to handle the exception from here
       case Success(response) =>
         this.user = User.from(jsonify(response.text).hcursor)
-        Data.saveName(username)
     }
-  }
-  def initSequence(): Unit = {
-    Data.setMode(modeDeterminant())
   }
 }

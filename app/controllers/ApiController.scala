@@ -4,7 +4,6 @@ import java.net.{NoRouteToHostException, SocketException, SocketTimeoutException
 import requests.TimeoutException
 
 import api.server.Api
-import api.server.local.data.Data
 import io.circe.Json
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
@@ -42,7 +41,7 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
             case Success(result) =>
               if(result.get[Boolean]("success").getOrElse(false)){
                 Api.initUser(user)
-                Redirect("/dashboard/home").withNewSession
+                Redirect("/dashboard/home").withNewSession.withSession("user" -> user)
               } else
                 Redirect("/account/login").flashing(flash("Login Failed!!!", "danger"): _*)
             case Failure(exception) =>
@@ -90,9 +89,8 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
               case _ => InternalServerError(views.html.err.InternalServerError())
             }
             case Success(result) =>
-              Data.flushName()
               Api.initUser(args("user").head)
-              Redirect("/account/profile").flashing(flash("Edited account successfully!", "success"): _*)
+              Redirect("/account/login").withNewSession.flashing(flash("Edited account successfully!", "success"): _*)
           }
         }
       }.getOrElse(Redirect("/acccount/profile").flashing(flash("Unable to edit account!", "danger"): _*))

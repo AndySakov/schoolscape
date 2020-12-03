@@ -4,11 +4,10 @@ import java.net.InetAddress
 import java.nio.file.{Files, Paths}
 
 import api.server.Api
-import api.server.local.data.Data
 import javax.inject._
 import play.api.mvc._
-import sys.process._
-import scala.util.{Failure, Success, Try}
+
+import scala.sys.process._
 
 
 @Singleton
@@ -29,11 +28,12 @@ class RenderController @Inject()(cc: ControllerComponents) extends AbstractContr
   def apiErr: Result = InternalServerError(views.html.err.HostUnreachable())
   def errUnknown(reason: String): Result = InternalServerError(views.html.err.UnknownError(reason))
 
-  def validateSession(x: Result): Result = {
-    Try(Api.user.username) match {
-      case Failure(exception) => Forbidden(views.html.err.Error(403, "Session expired!"))
-      case Success(value) => x
-    }
+  def validateSession[A](request: Request[A], next: Result): Result = {
+    request.session.get("user").map(x => if (Api.user.username == x){
+      next
+    } else {
+      Forbidden(views.html.err.Error(403, "Session expired!"))
+    }).get
   }
   
 
@@ -42,28 +42,28 @@ class RenderController @Inject()(cc: ControllerComponents) extends AbstractContr
     implicit request: Request[AnyContent] => {
       route match {
         case "home" =>
-          validateSession(Ok(views.html.home()))
+          validateSession(request, Ok(views.html.home()))
         case _ => err404
       }
     }
   }
   def examReplyTheory(x: Int): Action[AnyContent] = Action {
     implicit request => {
-      validateSession(Ok(views.html.school.exam_reply_theory(x)))
+      validateSession(request, Ok(views.html.school.exam_reply_theory(x)))
     }
   }
   def examReplyObjective(x: Int): Action[AnyContent] = Action {
     implicit request => {
-      validateSession(Ok(views.html.school.exam_reply_obj(x)))
+      validateSession(request, Ok(views.html.school.exam_reply_obj(x)))
     }
   }
   def school(path: String): Action[AnyContent] = Action{
     implicit request: Request[AnyContent] => {
       path match {
-        case "notes" => validateSession(Ok(views.html.school.notes()))
-        case "classwork" => validateSession(Ok(views.html.school.classwork()))
-        case "assignments" => validateSession(Ok(views.html.school.assignments()))
-        case "assessments" => validateSession(Ok(views.html.school.assessments()))
+        case "notes" => validateSession(request, Ok(views.html.school.notes()))
+        case "classwork" => validateSession(request, Ok(views.html.school.classwork()))
+        case "assignments" => validateSession(request, Ok(views.html.school.assignments()))
+        case "assessments" => validateSession(request, Ok(views.html.school.assessments()))
         case _ => err404
       }
     }
@@ -73,9 +73,9 @@ class RenderController @Inject()(cc: ControllerComponents) extends AbstractContr
       route match {
         case "login" => Ok(views.html.login())
         case "create" => Ok(views.html.signup())
-        case "profile" => validateSession(Ok(views.html.profile()))
+        case "profile" => validateSession(request, Ok(views.html.profile()))
         case "logout" =>
-          Data.flushName()
+          Api.user = null
           Redirect("/account/login").withNewSession
         case _ => err404
       }
