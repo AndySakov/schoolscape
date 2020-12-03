@@ -50,7 +50,7 @@ object Api {
   private val API_KEY: String = md5("EhqJ@1jP")
   val NAME: String = "SchoolScape Student"
   val THIS_YEAR: String = Year.now.toString
-  val SERVER: String = "https://school-scape-be.herokuapp.com/"
+  val SERVER: String = "https://school-scape-be.herokuapp.com"
   val AUTH_USER: String = s"$SERVER/student/auth"
   val CREATE_USER: String = s"$SERVER/student/create"
   val MAKE_SUGGESTION: String = s"$SERVER/drop/suggestion"

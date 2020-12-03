@@ -1,6 +1,7 @@
 package controllers
 
 import java.net.{NoRouteToHostException, SocketException, SocketTimeoutException}
+import java.util.concurrent.TimeoutException
 
 import api.server.Api
 import api.server.local.data.Data
@@ -27,6 +28,10 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
     List("notice" -> notice, "notice-type" -> s"alert-$ntype", "showing" -> "show")
   }
 
+  def errFlash(reason: String): (String, String) = {
+    "reason" -> reason
+  }
+
   def login: Action[AnyContent] = Action{
     request: Request[AnyContent] => {
       request.body.asFormUrlEncoded.map{
@@ -42,10 +47,11 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
                 Redirect("/account/login").flashing(flash("Login Failed!!!", "danger"): _*)
             case Failure(exception) =>
               exception match {
-                case _: NoRouteToHostException => Redirect("/error/api/connect_failure")
-                case _: SocketTimeoutException => Redirect("/error/api/connect_failure")
-                case _: SocketException => Redirect("/error/api/connect_failure")
-                case _ => InternalServerError(views.html.err.InternalServerError())
+                case _: NoRouteToHostException => Redirect("/error/api/connect_failure").flashing(errFlash("Server unreachable"))
+                case _: SocketTimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket connection timed out!"))
+                case _: SocketException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket related error!"))
+                case _: TimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Connection timed out"))
+//                case _ => InternalServerError(views.html.err.InternalServerError())
               }
           }
       }.getOrElse(Redirect("/error/login/failure"))
@@ -59,8 +65,8 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
           val formData = Map("full" -> args("full").head, "user" -> args("user").head, "class" -> args("class").head, "pass" -> args("pass").head)
           Try(jsonify(requests.post(url = Api.CREATE_USER, data = formData).text).hcursor) match {
             case Failure(exception) => exception match {
-              case _: NoRouteToHostException => Redirect("/error/api/connect_failure")
-              case _: SocketTimeoutException => Redirect("/error/api/connect_failure")
+              case _: NoRouteToHostException => Redirect("/error/api/connect_failure").flashing(errFlash("Server unreachable"))
+              case _: SocketTimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket connection timed out!"))
               case _ => InternalServerError(views.html.err.InternalServerError())
             }
             case Success(result) =>
@@ -80,7 +86,7 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
             case Failure(exception) => exception match {
               case _: NoRouteToHostException => Redirect("/error/api/connect_failure")
               case _: SocketTimeoutException => Redirect("/error/api/connect_failure")
-              case _: RequestFailedException => Redirect("/acccount/profile").flashing(flash("Edited account successfully!", "success"): _*)
+              case _: RequestFailedException => Redirect("/acccount/profile").flashing(flash("Unable to edit account!", "danger"): _*)
               case _ => InternalServerError(views.html.err.InternalServerError())
             }
             case Success(result) =>
@@ -89,7 +95,7 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
               Redirect("/account/profile").flashing(flash("Edited account successfully!", "success"): _*)
           }
         }
-      }.getOrElse(Redirect("/acccount/profile").flashing(flash("Edited account successfully!", "success"): _*))
+      }.getOrElse(Redirect("/acccount/profile").flashing(flash("Unable to edit account!", "danger"): _*))
     }
   }
 }

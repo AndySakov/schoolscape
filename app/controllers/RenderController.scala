@@ -27,6 +27,7 @@ class RenderController @Inject()(cc: ControllerComponents) extends AbstractContr
   def err500: Result = InternalServerError(views.html.err.InternalServerError())
   def err404: Result = NotFound(views.html.err.NotFound())
   def apiErr: Result = InternalServerError(views.html.err.HostUnreachable())
+  def errUnknown(reason: String): Result = InternalServerError(views.html.err.UnknownError(reason))
 
   def validateSession(x: Result): Result = {
     Try(Api.user.username) match {
@@ -90,7 +91,11 @@ class RenderController @Inject()(cc: ControllerComponents) extends AbstractContr
   def error(err: String): Action[AnyContent] = Action{
     implicit request: Request[AnyContent] => {
       err match {
-        case "api/connect_failure" => apiErr
+        case "api/connect_failure" => request.flash.get("reason") match {
+          case Some("Server unreachable") => apiErr
+          case Some(reason) => errUnknown(reason)
+          case None => InternalServerError(views.html.err.InternalServerError())
+        }
         case _ => err500
       }
     }
