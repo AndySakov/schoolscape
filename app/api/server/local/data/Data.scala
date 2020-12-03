@@ -113,22 +113,24 @@ object Data {
 
         }
       }
-      def pLetterDecode(m: String): String ={
-        case "?" => "."
-        case "~" => "_"
-        case ";" => " "
-        case "\t" => "\t"
-        case _ =>
-          Try(dict.filter(x => x._2 == m).head._1) match {
-            case Success(value) =>
-              value
-            case Failure(exception) =>
-              exception match {
-                case _:NoSuchElementException =>
-                  println(s"Morse code $m has no english equivalent")
-                  m
-              }
-          }
+      def pLetterDecode(m: String): String = {
+        m match {
+          case "?" => "."
+          case "~" => "_"
+          case ";" => " "
+          case "\t" => "\t"
+          case _ =>
+            Try(dict.filter(x => x._2 == m).head._1) match {
+              case Success(value) =>
+                value
+              case Failure(exception) =>
+                exception match {
+                  case _:NoSuchElementException =>
+                    println(s"Morse code $m has no english equivalent")
+                    m
+                }
+            }
+        }
       }
       def wordDecode(m: String): String = {
         val all = m.split("")
