@@ -4,7 +4,7 @@
 		module="schoolscape-build"
 		revision="0.1.0-SNAPSHOT"
 		status="integration"
-		publication="20201203111858"
+		publication="20201203124149"
 		e:sbtVersion="1.0" e:scalaVersion="2.12"
 	>
 		<description>
@@ -41,7 +41,7 @@
 			<artifact name="global-plugins" type="doc" ext="jar" conf="compile" e:classifier="javadoc"/>
 		</dependency>
 		<dependency org="ch.epfl.scala" name="sbt-bloop" rev="1.4.3" conf="compile->default(compile)" e:sbtVersion="1.0" e:scalaVersion="2.12"/>
-		<dependency org="com.typesafe.play" name="sbt-plugin" rev="2.7.3" conf="compile->default(compile)" e:sbtVersion="1.0" e:scalaVersion="2.12"/>
+		<dependency org="com.typesafe.play" name="sbt-plugin" rev="2.8.0" conf="compile->default(compile)" e:sbtVersion="1.0" e:scalaVersion="2.12"/>
 		<dependency org="org.foundweekends.giter8" name="sbt-giter8-scaffold" rev="0.11.0" conf="compile->default(compile)" e:sbtVersion="1.0" e:scalaVersion="2.12"/>
 		<dependency org="org.scalavista" name="sbt-scalavista" rev="0.1.4" conf="compile->default(compile)" e:sbtVersion="1.0" e:scalaVersion="2.12"/>
 		<dependency org="com.typesafe.sbt" name="sbt-native-packager" rev="1.7.5" conf="compile->default(compile)" e:sbtVersion="1.0" e:scalaVersion="2.12"/>
