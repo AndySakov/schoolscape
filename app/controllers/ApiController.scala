@@ -1,7 +1,7 @@
 package controllers
 
 import java.net.{NoRouteToHostException, SocketException, SocketTimeoutException}
-import java.util.concurrent.TimeoutException
+import requests.TimeoutException
 
 import api.server.Api
 import api.server.local.data.Data
@@ -51,7 +51,7 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
                 case _: SocketTimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket connection timed out!"))
                 case _: SocketException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket related error!"))
                 case _: TimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Connection timed out"))
-//                case _ => InternalServerError(views.html.err.InternalServerError())
+                case _ => InternalServerError(views.html.err.InternalServerError())
               }
           }
       }.getOrElse(Redirect("/error/login/failure"))
