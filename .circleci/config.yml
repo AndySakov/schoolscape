@@ -37,3 +37,5 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies--{{ checksum "build.sbt" }
+          
+      - run: cat /dev/null | sbt test:test
