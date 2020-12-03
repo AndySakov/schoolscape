@@ -1,1 +1,10 @@
-[debug] downloaded https://repo1.maven.org/maven2/ch/epfl/scala/sbt-bloop_2.12_1.0/1.4.0-RC1-69-693de22a/sbt-bloop-1.4.0-RC1-69-693de22a.jar
+[debug] downloaded https://repo1.maven.org/maven2/com/typesafe/sbt/sbt-native-packager_2.12_1.0/1.7.5/sbt-native-packager-1.7.5.pom
+[debug] downloaded https://repo1.maven.org/maven2/com/typesafe/sbt/sbt-native-packager_2.12_1.0/1.7.5/sbt-native-packager-1.7.5.pom.sha1
+[debug] downloaded https://oss.sonatype.org/content/repositories/snapshots/com/typesafe/sbt/sbt-native-packager_2.12_1.0/1.7.5/sbt-native-packager-1.7.5.pom
+[debug] downloaded https://oss.sonatype.org/content/repositories/snapshots/com/typesafe/sbt/sbt-native-packager_2.12_1.0/1.7.5/sbt-native-packager-1.7.5.pom.sha1
+[debug] downloaded https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/com.typesafe.sbt/sbt-native-packager/scala_2.12/sbt_1.0/1.7.5/ivys/ivy.xml
+[debug] downloaded https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.20/commons-compress-1.20.pom
+[debug] downloaded https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.20/commons-compress-1.20.jar
+[debug] downloaded https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/com.typesafe.sbt/sbt-native-packager/scala_2.12/sbt_1.0/1.7.5/srcs/sbt-native-packager-sources.jar
+[debug] downloaded https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/com.typesafe.sbt/sbt-native-packager/scala_2.12/sbt_1.0/1.7.5/jars/sbt-native-packager.jar
+[debug] downloaded https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/com.typesafe.sbt/sbt-native-packager/scala_2.12/sbt_1.0/1.7.5/docs/sbt-native-packager-javadoc.jar

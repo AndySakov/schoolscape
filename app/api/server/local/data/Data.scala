@@ -3,9 +3,10 @@ package api.server.local.data
 import java.nio.file.{Files, NoSuchFileException, Paths, StandardOpenOption}
 import java.util.NoSuchElementException
 
-import com.sun.net.httpserver.Authenticator.Success
+import api.server.StartMode
+import api.server.StartMode.StartMode
 
-import scala.util.Failure
+import scala.util.{Failure, Success, Try}
 
 object Data {
 
@@ -76,10 +77,12 @@ object Data {
             s"${dict.getOrElse(s, s)}"
         }
       }
-      data match {
-        case isWord(data) => wordEncode(data)
-        case isLetter(data) => sLetterEncode(data)
-        case _ => s"$data"
+      if(isWord(data)){
+        wordEncode(data)
+      } else if(isLetter(data)) {
+        sLetterEncode(data)
+      } else {
+        s"$data"
       }
     }
 
@@ -142,10 +145,12 @@ object Data {
         val de = end.flatMap(pLetterDecode).mkString
         de
       }
-      data match {
-        case isLetter(data) => letterDecode(data)
-        case isWord(data) => wordDecode(data)
-        case _ => "?"
+      if(isLetter(data)){
+        letterDecode(data)
+      } else if(isWord(data)){
+        wordDecode(data)
+      } else {
+        "?"
       }
     }
   }

@@ -50,7 +50,7 @@ object Api {
   private val API_KEY: String = md5("EhqJ@1jP")
   val NAME: String = "SchoolScape Student"
   val THIS_YEAR: String = Year.now.toString
-  val SERVER: String = "http://192.168.137.102:3000"
+  val SERVER: String = ""
   val AUTH_USER: String = s"$SERVER/student/auth"
   val CREATE_USER: String = s"$SERVER/student/create"
   val MAKE_SUGGESTION: String = s"$SERVER/drop/suggestion"
@@ -69,8 +69,8 @@ object Api {
     Try{
       requests.get(SERVER)
     } match {
-      case Success() => StartMode.ONLINE
-      case Failure() => StartMode.OFFLINE
+      case Success(value) => StartMode.ONLINE
+      case Failure(exception) => StartMode.OFFLINE
     }
   }
   def initUser(username: String): Unit = {
