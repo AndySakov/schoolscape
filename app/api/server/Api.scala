@@ -66,7 +66,7 @@ object Api {
 
   def initUser(username: String): Unit = {
     Try(requests.post(Api.USER_DATA, data = Map("user" -> username, "key" -> API_KEY))) match {
-      case Failure(exception) => //TODO: Figure out how to handle the exception from here
+      case Failure(exception) => throw exception
       case Success(response) =>
         this.user = User.from(jsonify(response.text).hcursor)
     }
