@@ -1,13 +1,12 @@
 package controllers
 
 import java.net.{NoRouteToHostException, SocketException, SocketTimeoutException}
-import requests.TimeoutException
 
-import api.server.Api
-import io.circe.Json
+import api.server.Commons._
 import javax.inject.{Inject, Singleton}
+import models.UserFactory
 import play.api.mvc._
-import requests.RequestFailedException
+import requests.{RequestFailedException, TimeoutException}
 
 import scala.util.{Failure, Success, Try}
 //noinspection DuplicatedCode
@@ -20,12 +19,6 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
     * @note Might be broken down into several components later
     * @group controllers
     */
-  private def jsonify(text: String): Json = {
-    io.circe.parser.parse(text).getOrElse(Json.Null)
-  }
-  private def flash(notice: String, ntype: String): List[(String, String)] = {
-    List("notice" -> notice, "notice-type" -> s"alert-$ntype", "showing" -> "show")
-  }
 
   def errFlash(reason: String): (String, String) = {
     "reason" -> reason
@@ -37,10 +30,10 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
         args =>
           val user = args("user").head
           val pass = args("pass").head
-          Try(jsonify(requests.post(Api.AUTH_USER, data = Map("user" -> user, "pass" -> pass)).text).hcursor) match {
+          Try(jsonify(requests.post(AUTH_USER, data = Map("user" -> user, "pass" -> pass)).text).hcursor) match {
             case Success(result) =>
               if(result.get[Boolean]("success").getOrElse(false)){
-                Api.initUser(user)
+                UserFactory.initUser(user)
                 Redirect("/dashboard/home").withNewSession.withSession("user" -> user)
               } else
                 Redirect("/account/login").flashing(flash("Login Failed!!!", "danger"): _*)
@@ -62,7 +55,7 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
       request.body.asFormUrlEncoded.map {
         args => {
           val formData = Map("full" -> args("full").head, "user" -> args("user").head, "class" -> args("class").head, "pass" -> args("pass").head)
-          Try(jsonify(requests.post(url = Api.CREATE_USER, data = formData).text).hcursor) match {
+          Try(jsonify(requests.post(url = CREATE_USER, data = formData).text).hcursor) match {
             case Failure(exception) => exception match {
               case _: NoRouteToHostException => Redirect("/error/api/connect_failure").flashing(errFlash("Server unreachable"))
               case _: SocketTimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket connection timed out!"))
@@ -80,8 +73,8 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
     request: Request[AnyContent] => {
       request.body.asFormUrlEncoded.map {
         args => {
-          val formData = Map("oldUser" -> Api.user.username, "name" -> args("name").head, "user" -> args("user").head, "pass" -> args("pass").head)
-          Try(jsonify(requests.post(url = Api.EDIT_USER, data = formData).text).hcursor) match {
+          val formData = Map("oldUser" -> user.username, "name" -> args("name").head, "user" -> args("user").head, "pass" -> args("pass").head)
+          Try(jsonify(requests.post(url = EDIT_USER, data = formData).text).hcursor) match {
             case Failure(exception) => exception match {
               case _: NoRouteToHostException => Redirect("/error/api/connect_failure")
               case _: SocketTimeoutException => Redirect("/error/api/connect_failure")
@@ -89,7 +82,7 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
               case _ => InternalServerError(views.html.err.InternalServerError())
             }
             case Success(result) =>
-              Api.initUser(args("user").head)
+              UserFactory.initUser(args("user").head)
               Redirect("/account/login").withNewSession.flashing(flash("Edited account successfully!", "success"): _*)
           }
         }

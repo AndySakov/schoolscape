@@ -1,4 +1,5 @@
-@import api.server.Api
+@import api.server._
+@import api.server.Commons._
 @(reason: String)
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +29,7 @@
 						<div class="col-lg-7 mx-auto text-white">
 							<div class="row align-items-center d-flex flex-row">
 								<div class="col-lg-6 text-lg-right pr-lg-4">
-									<h1 class="display-1 mb-0">ERROR</h1>
+									<h1 class="display-3 mb-0">ERROR</h1>
 								</div>
 								<div class="col-lg-6 error-page-divider text-lg-left pl-lg-4">
 									<h2>SORRY!</h2>
@@ -42,7 +43,7 @@
 							</div>
 							<div class="row mt-5">
 								<div class="col-12 mt-xl-2">
-									<p class="text-white font-weight-medium text-center">Copyright &copy; @Api.THIS_YEAR <a href="https://www.bootstrapdash.com/" style="color: rgb(146,47,255);" target="_blank">ShiftIO</a>. All rights reserved.</p>
+									<p class="text-white font-weight-medium text-center">Copyright &copy; @THIS_YEAR <a href="https://www.bootstrapdash.com/" style="color: rgb(146,47,255);" target="_blank">ShiftIO</a>. All rights reserved.</p>
 								</div>
 							</div>
 						</div>

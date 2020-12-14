@@ -10,11 +10,19 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 GET     /account/*route             controllers.RenderController.account(route: String)
 #
-GET     /dashboard/school/exam/theory/reply/*stampy         controllers.RenderController.examReplyTheory(stampy: Int)
+GET     /dashboard/student/exam/theory/reply/*stampy         controllers.RenderController.studentExamReplyTheory(stampy: Int)
 #
-GET     /dashboard/school/exam/obj/reply/*stampy         controllers.RenderController.examReplyObjective(stampy: Int)
+GET     /dashboard/student/exam/obj/reply/*stampy         controllers.RenderController.studentExamReplyObjective(stampy: Int)
 #
-GET     /dashboard/school/*path     controllers.RenderController.school(path: String)
+#GET     /dashboard/teacher/exam/theory/replies/*stampy         controllers.RenderController.teacherExamReplyTheory(stampy: Int)
+#
+#GET     /dashboard/teacher/exam/obj/replies/*stampy         controllers.RenderController.teacherExamReplyObjective(stampy: Int)
+#
+GET     /dashboard/teacher/manage/*path     controllers.RenderController.manage(path: String)
+#
+GET     /dashboard/teacher/upload/*path     controllers.RenderController.upload(path: String)
+#
+GET     /dashboard/student/*path     controllers.RenderController.student(path: String)
 # Add sid validation shit
 GET     /dashboard/*route           controllers.RenderController.dashboard(route: String)
 #

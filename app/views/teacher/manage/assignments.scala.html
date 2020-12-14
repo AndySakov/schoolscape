@@ -1,0 +1,81 @@
+@import api.server._
+@import api.server.Commons._
+@()
+@dashboard("Homework & Projects") {
+	@*First row*@
+	<div class="row">
+		@*Homework*@
+		<div class="col-lg-auto grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Homework</h4>
+					<table class="table table-hover table-responsive">
+						<thead>
+							<tr>
+								<th>Subject</th>
+								<th>Topic</th>
+								<th>Date Assigned</th>
+								<th>Obtainable Score</th>
+								<th>Class</th>
+								<th>Term</th>
+							</tr>
+						</thead>
+						<tbody>
+							@for(ass <- TeacherApi.assignments){
+								<tr>
+									<td>@ass.sub</td>
+									<td>@ass.topic</td>
+									<td>@ass.date</td>
+									<td>@ass.max_score</td>
+									<td>@ass.cls</td>
+									<td>
+										@{
+											ass.term match {
+												case 1 => "First Term"
+												case 2 => "Second Term"
+												case 3 => "Third Term"
+												case _ => "?"
+											}
+										}
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+@*Edit stuffs*@
+	@*<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">*@
+	@*									<div class="modal-dialog">*@
+	@*										<div class="modal-content">*@
+	@*											<div class="modal-header">*@
+	@*												<h4 class="modal-title" id="myModalLabel">@ass.topic</h4>*@
+	@*											</div>*@
+	@*											<div class="modal-body">*@
+	@*												<form role="form" action="@Api.SUBMIT_ASSIGNMENT" method="post" enctype="multipart/form-data">*@
+	@*													<div class="form-group" hidden>*@
+	@*														<input type="text" name="user" hidden value="@Api.user.username">*@
+	@*														<input type="text" name="qid" hidden value="@ass.id">*@
+	@*													</div>*@
+	@*													<div class="form-group">*@
+	@*														<label>File upload</label>*@
+	@*														<input type="file" name="file" class="file-upload-default">*@
+	@*														<div class="input-group col-xs-12">*@
+	@*															<input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Assignment">*@
+	@*															<span class="input-group-append">*@
+	@*																<button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>*@
+	@*															</span>*@
+	@*														</div>*@
+	@*													</div>*@
+	@*													<div class="modal-footer">*@
+	@*														<button class="btn btn-primary" type="submit">Submit</button>*@
+	@*														<button type="button" class="btn btn-light" data-dismiss="modal">Close </button>*@
+	@*													</div>*@
+	@*												</form>*@
+	@*											</div>*@
+	@*										</div><!-- /.modal-content -->*@
+	@*									</div>*@
+	@*								</div>*@

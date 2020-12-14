@@ -1,12 +1,13 @@
 @()(implicit flash: Flash)
-@import api.server.Api
+@import api.server._
+@import api.server.Commons.NAME
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 			<!-- Required meta tags -->
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>@Api.NAME Signup</title>
+		<title>@NAME Signup</title>
 			<!-- plugins:css -->
 		<link rel="stylesheet" href="@routes.Assets.versioned("vendors/mdi/css/materialdesignicons.min.css")">
 		<link rel="stylesheet" href="@routes.Assets.versioned("vendors/css/vendor.bundle.base.css")">
