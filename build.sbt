@@ -2,7 +2,7 @@ enablePlugins(UniversalPlugin)
 enablePlugins(WindowsPlugin)
 enablePlugins(JavaAppPackaging)
 
-name := """SchoolScape Student"""
+name := """schoolscape"""
 organization := "com.tellidium"
 version := "1.0"
 maintainer := "andysakov@shiftio.org"

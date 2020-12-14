@@ -1,9 +1,8 @@
 package controllers
 
-import java.net.InetAddress
 import java.nio.file.{Files, Paths}
 
-import api.server.Api
+import api.server.Commons._
 import javax.inject._
 import play.api.mvc._
 
@@ -18,7 +17,6 @@ class RenderController @Inject()(cc: ControllerComponents) extends AbstractContr
       * @author Obafemi Teminife
       * @group controllers
       */
-    val ip: InetAddress = Api.getIp
 
   def flash(notice: String, mode: String): List[(String, String)] = {
     List("notice" -> notice, "notice-type" -> s"alert-$mode", "showing" -> "show")
@@ -29,7 +27,7 @@ class RenderController @Inject()(cc: ControllerComponents) extends AbstractContr
   def errUnknown(reason: String): Result = InternalServerError(views.html.err.UnknownError(reason))
 
   def validateSession[A](request: Request[A], next: Result): Result = {
-    request.session.get("user").map(x => if (Api.user.username == x){
+    request.session.get("user").map(x => if (user.username == x){
       next
     } else {
       Forbidden(views.html.err.Error(403, "Session expired!"))
@@ -47,27 +45,63 @@ class RenderController @Inject()(cc: ControllerComponents) extends AbstractContr
       }
     }
   }
-  def examReplyTheory(x: Int): Action[AnyContent] = Action {
+  def studentExamReplyTheory(x: Int): Action[AnyContent] = Action {
     implicit request => {
-      validateSession(request, Ok(views.html.school.exam_reply_theory(x)))
+      validateSession(request, Ok(views.html.student.exam_reply_theory(x)))
     }
   }
-  def examReplyObjective(x: Int): Action[AnyContent] = Action {
+  def studentExamReplyObjective(x: Int): Action[AnyContent] = Action {
     implicit request => {
-      validateSession(request, Ok(views.html.school.exam_reply_obj(x)))
+      validateSession(request, Ok(views.html.student.exam_reply_obj(x)))
     }
   }
-  def school(path: String): Action[AnyContent] = Action{
+
+//  def teacherExamReplyTheory(x: Int): Action[AnyContent] = Action {
+//    implicit request => {
+//      validateSession(request, Ok(views.html.teacher.manage.exam_reply_theory(x)))
+//    }
+//  }
+//  def teacherExamReplyObjective(x: Int): Action[AnyContent] = Action {
+//    implicit request => {
+//      validateSession(request, Ok(views.html.teacher.manage.exam_reply_obj(x)))
+//    }
+//  }
+
+  def student(path: String): Action[AnyContent] = Action{
     implicit request: Request[AnyContent] => {
       path match {
-        case "notes" => validateSession(request, Ok(views.html.school.notes()))
-        case "classwork" => validateSession(request, Ok(views.html.school.classwork()))
-        case "assignments" => validateSession(request, Ok(views.html.school.assignments()))
-        case "assessments" => validateSession(request, Ok(views.html.school.assessments()))
+        case "notes" => validateSession(request, Ok(views.html.student.notes()))
+        case "classwork" => validateSession(request, Ok(views.html.student.classwork()))
+        case "assignments" => validateSession(request, Ok(views.html.student.assignments()))
+        case "assessments" => validateSession(request, Ok(views.html.student.assessments()))
         case _ => err404
       }
     }
   }
+
+  def upload(path: String): Action[AnyContent] = Action{
+    implicit request: Request[AnyContent] => {
+      path match {
+        case "note" => validateSession(request, Ok(views.html.teacher.upload.notes()))
+        case "classwork" => validateSession(request, Ok(views.html.teacher.upload.classwork()))
+        case "assignment" => validateSession(request, Ok(views.html.teacher.upload.assignments()))
+        case "assessment" => validateSession(request, Ok(views.html.teacher.upload.assessments()))
+        case _ => err404
+      }
+    }
+  }
+  def manage(path: String): Action[AnyContent] = Action{
+    implicit request: Request[AnyContent] => {
+      path match {
+        case "notes" => validateSession(request, Ok(views.html.teacher.manage.notes()))
+        case "classworks" => validateSession(request, Ok(views.html.teacher.manage.classwork()))
+        case "assignments" => validateSession(request, Ok(views.html.teacher.manage.assignments()))
+        case "assessments" => validateSession(request, Ok(views.html.teacher.manage.assessments()))
+        case _ => err404
+      }
+    }
+  }
+
   def account(route: String): Action[AnyContent] = Action {
     implicit request: Request[AnyContent] => {
       route match {
@@ -75,7 +109,7 @@ class RenderController @Inject()(cc: ControllerComponents) extends AbstractContr
         case "create" => Ok(views.html.signup())
         case "profile" => validateSession(request, Ok(views.html.profile()))
         case "logout" =>
-          Api.user = null
+          user = null
           Redirect("/account/login").withNewSession
         case _ => err404
       }

@@ -1,7 +1,8 @@
 @*
 * Dashboard main UI that renders the navbar and sidebar
 *@
-@import api.server.Api
+@import api.server._
+@import api.server.Commons._
 @(title: String)(content: Html)
 <!DOCTYPE html>
 <html lang="en">
@@ -86,8 +87,12 @@
 										<!--change to offline or busy as needed-->
 								</div>
 								<div class="nav-profile-text d-flex flex-column">
-									<span class="font-weight-bold mb-2">@Api.user.fullname</span>
-									<span class="text-secondary text-small">@Api.user._class Student</span>
+									<span class="font-weight-bold mb-2">@user.name</span>
+									@if( role == "student" ) {
+										<span class="text-secondary text-small">@user._class Student</span>
+									} else {
+										<span class="text-secondary text-small">Teacher</span>
+									}
 								</div>
 							</a>
 						</li>
@@ -133,7 +138,7 @@
 						@*<!-- Footer element partials/_footer.html -->*@
 					<footer class="footer">
 						<div class="d-sm-flex justify-content-center justify-content-sm-between">                                                                         @*Chamge this ref to  ShiftIO main website*@
-							<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright &copy; @Api.THIS_YEAR <a href="https://www.bootstrapdash.com/" style="color: rgb(146,47,255);" target="_blank">ShiftIO</a>. All rights reserved.</span>
+							<span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright &copy; @THIS_YEAR <a href="https://www.bootstrapdash.com/" style="color: rgb(146,47,255);" target="_blank">ShiftIO</a>. All rights reserved.</span>
 						</div>
 					</footer>
 						<!-- partial -->
