@@ -1,4 +1,4 @@
-[debug] [schoolscape-build] Classpath dependencies List()
-[debug] [schoolscape-build] Dependencies from configurations List()
-[debug] Bloop wrote the configuration of project 'schoolscape-build' to 'C:\Users\lenovo\Documents\code\scala\projectz\schoolscape\project\.bloop\schoolscape-build.json'
-[success] Generated .bloop\schoolscape-build.json
+[0m[[0m[0mdebug[0m] [0m[0m[schoolscape-build] Classpath dependencies List()[0m
+[0m[[0m[0mdebug[0m] [0m[0m[schoolscape-build] Dependencies from configurations List()[0m
+[0m[[0m[0mdebug[0m] [0m[0mBloop wrote the configuration of project 'schoolscape-build' to 'C:\Users\lenovo\Documents\code\scala\projectz\schoolscape\project\.bloop\schoolscape-build.json'[0m
+[0m[[0m[32msuccess[0m] [0m[0mGenerated .bloop\schoolscape-build.json[0m

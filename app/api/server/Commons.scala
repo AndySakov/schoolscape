@@ -11,7 +11,9 @@ import scala.util.Random
 
 object Commons {
   var user: User = UserFactory.demoUser(Random.shuffle(List("teacher", "student")).head)
-  lazy val role: String = user.role
+  var role: String = ""
+
+  def updateRole(newRole: String): Unit = role = newRole.toLowerCase
 
   def flash(notice: String, ntype: String): List[(String, String)] = {
     List("notice" -> notice, "notice-type" -> s"alert-$ntype", "showing" -> "show")
@@ -30,11 +32,11 @@ object Commons {
   }
 
   val API_KEY: String = md5("EhqJ@1jP")
-  val NAME: String = "SchoolScape Student"
+  val NAME: String = "SchoolScape"
   val THIS_YEAR: String = Year.now.toString
   val SERVER: String = "https://school-scape-be.herokuapp.com"
   val MAKE_SUGGESTION: String = s"$SERVER/drop/suggestion"
-  val USER_DATA: String = s"$SERVER/user/data"
+  val USER_DATA: String = s"$SERVER/$role/data"
 
 
   lazy val EDIT_USER: String = s"$SERVER/$role/edit"

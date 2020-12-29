@@ -4,7 +4,9 @@ import api.server.Commons._
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 
-class TeacherApi
+class TeacherApi extends Api {
+  override def _type: String = "teacher"
+}
 
 object TeacherApi {
 
@@ -27,5 +29,6 @@ object TeacherApi {
   lazy val MY_ASSIGNMENTS: String = s"$SERVER/my/assignments"
   lazy val MY_NOTES: String = s"$SERVER/my/notes"
 
+  def apply(): TeacherApi = new TeacherApi()
 
 }

@@ -3,6 +3,7 @@ package controllers
 import java.net.{NoRouteToHostException, SocketException, SocketTimeoutException}
 
 import api.server.Commons._
+import api.server.{Api, NoneApi, StudentApi, TeacherApi}
 import javax.inject.{Inject, Singleton}
 import models.UserFactory
 import play.api.mvc._
@@ -24,16 +25,26 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
     "reason" -> reason
   }
 
+  var api: Api = NoneApi()
+
   def login: Action[AnyContent] = Action{
     request: Request[AnyContent] => {
       request.body.asFormUrlEncoded.map{
         args =>
           val user = args("user").head
           val pass = args("pass").head
+          val role = args("role").head
+          updateRole(role)
+          api = role match {
+            case "student" => StudentApi()
+            case "teacher" => TeacherApi()
+            case "admin" => NoneApi()
+            case _ => NoneApi()
+          }
           Try(jsonify(requests.post(AUTH_USER, data = Map("user" -> user, "pass" -> pass)).text).hcursor) match {
             case Success(result) =>
               if(result.get[Boolean]("success").getOrElse(false)){
-                UserFactory.initUser(user)
+                UserFactory.initUser(user, role.toLowerCase)
                 Redirect("/dashboard/home").withNewSession.withSession("user" -> user)
               } else
                 Redirect("/account/login").flashing(flash("Login Failed!!!", "danger"): _*)
@@ -82,7 +93,7 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
               case _ => InternalServerError(views.html.err.InternalServerError())
             }
             case Success(result) =>
-              UserFactory.initUser(args("user").head)
+              UserFactory.initUser(args("user").head, role)
               Redirect("/account/login").withNewSession.flashing(flash("Edited account successfully!", "success"): _*)
           }
         }
