@@ -5,7 +5,9 @@ import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 
 
-class StudentApi
+class StudentApi extends Api{
+  override def _type: String = "student"
+}
 
 object StudentApi {
 
@@ -31,5 +33,7 @@ object StudentApi {
   lazy val GET_NOTES: String = s"$SERVER/${user._class}/notes"
   lazy val GET_ASSESSMENT_THEORY: String = s"$SERVER/${user._class}/exam-theory"
   lazy val GET_ASSESSMENT_OBJ: String = s"$SERVER/${user._class}/exam-obj"
+
+  def apply(): StudentApi = new StudentApi()
 
 }

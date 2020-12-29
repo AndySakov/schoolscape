@@ -1,30 +1,29 @@
 package models
 
-
-import api.server.Commons._
+import api.server.Commons.{API_KEY, SERVER, jsonify, user}
 import io.circe.HCursor
 
 import scala.util.{Failure, Success, Try}
 
 object UserFactory {
-  def from(obj: HCursor): User = {
+  def from(obj: HCursor, role: String): User = {
     val id = obj.get[Int]("id").getOrElse(0)
     val name = obj.get[String]("name").getOrElse("N/A")
     val user = obj.get[String]("user").getOrElse("N/A")
     val cls = obj.get[String]("class").getOrElse("N/A")
     val pass = obj.get[String]("pass").getOrElse("N/A")
-    val role = obj.get[String]("role").getOrElse("N/A")
+//    val role = obj.get[String]("role").getOrElse("N/A")
     role match {
       case "student" => new Student(id,name,user,cls,pass)
       case "teacher" => new Teacher(id,name,user,pass)
     }
   }
 
-  def initUser(username: String): Unit = {
-    Try(requests.post(USER_DATA, data = Map("user" -> username, "key" -> API_KEY))) match {
+  def initUser(username: String, role: String): Unit = {
+    Try(requests.post(s"$SERVER/$role/data", data = Map("user" -> username, "key" -> API_KEY))) match {
       case Failure(exception) => throw exception
       case Success(response) =>
-        user = UserFactory.from(jsonify(response.text).hcursor)
+        user = UserFactory.from(jsonify(response.text).hcursor, role)
     }
   }
 
