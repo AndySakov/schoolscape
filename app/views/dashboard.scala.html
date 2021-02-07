@@ -108,6 +108,7 @@
 								<i class="mdi mdi-account menu-icon"></i>
 							</a>
 						</li>
+						@if(role == "student"){
 						<li class="nav-item">
 							<a class="nav-link" data-toggle="collapse" href="#categories" aria-expanded="false" aria-controls="ui-basic">
 								<span class="menu-title">School Work</span>
@@ -116,16 +117,45 @@
 							</a>
 							<div class="collapse" id="categories">
 								<ul class="nav flex-column sub-menu">
-									<li class="nav-item"> <a class="nav-link" href="/dashboard/school/notes">Notes</a></li>
-									<li class="nav-item"> <a class="nav-link" href="/dashboard/school/classwork">Class Exercises</a></li>
-									<li class="nav-item"> <a class="nav-link" href="/dashboard/school/assignments">Homework & Projects</a></li>
-									<li class="nav-item"> <a class="nav-link" href="/dashboard/school/assessments">Tests & Examinations</a></li>
+									<li class="nav-item"> <a class="nav-link" href="/dashboard/student/notes">Notes</a></li>
+									<li class="nav-item"> <a class="nav-link" href="/dashboard/student/classwork">Class Exercises</a></li>
+									<li class="nav-item"> <a class="nav-link" href="/dashboard/student/assignments">Homework & Projects</a></li>
+									<li class="nav-item"> <a class="nav-link" href="/dashboard/student/assessments">Tests & Examinations</a></li>
+								</ul>
+							</div>
+						</li>
+						} else {
+						<li class="nav-item">
+							<a class="nav-link" data-toggle="collapse" href="#upload" aria-expanded="false" aria-controls="ui-basic">
+								<span class="menu-title">Upload Student Data</span>
+								<i class="menu-arrow"></i>
+								<i class="mdi mdi-cloud-upload menu-icon"></i>
+							</a>
+							<div class="collapse" id="upload">
+								<ul class="nav flex-column sub-menu">
+									<li class="nav-item"><a class="nav-link" href="/dashboard/teacher/upload/note">Upload Notes</a></li>
+									<li class="nav-item"><a class="nav-link" href="/dashboard/teacher/upload/classwork">Set Class Exercises</a></li>
+									<li class="nav-item"><a class="nav-link" href="/dashboard/teacher/upload/assignment">Set Homework & Projects</a></li>
+									<li class="nav-item"><a class="nav-link" href="/dashboard/teacher/upload/assessment">Set Tests & Examinations</a></li>
 								</ul>
 							</div>
 						</li>
 						<li class="nav-item">
-
+							<a class="nav-link" data-toggle="collapse" href="#manage" aria-expanded="false" aria-controls="ui-basic">
+								<span class="menu-title">Manage Uploaded Data</span>
+								<i class="menu-arrow"></i>
+								<i class="mdi mdi-school menu-icon"></i>
+							</a>
+							<div class="collapse" id="manage">
+								<ul class="nav flex-column sub-menu">
+									<li class="nav-item"><a class="nav-link" href="/dashboard/teacher/manage/notes">View Uploaded Notes</a></li>
+									<li class="nav-item"><a class="nav-link" href="/dashboard/teacher/manage/classworks">Mark Class Exercises</a></li>
+									<li class="nav-item"><a class="nav-link" href="/dashboard/teacher/manage/assignments">Mark Homework & Projects</a></li>
+									<li class="nav-item"><a class="nav-link" href="/dashboard/teacher/manage/assessments">Mark Tests & Examinations</a></li>
+								</ul>
+							</div>
 						</li>
+						}
 					</ul>
 				</nav>
 					<!-- partial -->
