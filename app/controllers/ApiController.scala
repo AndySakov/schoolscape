@@ -3,7 +3,7 @@ package controllers
 import java.net.{NoRouteToHostException, SocketException, SocketTimeoutException}
 
 import api.server.Commons._
-import api.server.{Api, NoneApi, StudentApi, TeacherApi}
+import api.server.{Api, Commons, NoneApi, StudentApi, TeacherApi}
 import javax.inject.{Inject, Singleton}
 import models.UserFactory
 import play.api.Logger
@@ -34,7 +34,7 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
     request.body.asFormUrlEncoded
   }
 
-  var api: Api = NoneApi()
+//  var api: Api = NoneApi()
 
   def login: Action[AnyContent] = Action{
     implicit request: Request[AnyContent] => {
@@ -43,12 +43,7 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
           val user = args("user").head
           val pass = args("pass").head
           val role = args("role").head
-          api = role match {
-            case "student" => StudentApi()
-            case "teacher" => TeacherApi()
-            case "admin" => NoneApi()
-            case _ => NoneApi()
-          }
+          Commons.updateRole(role)
           Try(jsonify(requests.post(AUTH_USER, data = Map("user" -> user, "pass" -> pass)).text).hcursor) match {
             case Success(result) =>
               if(result.get[Boolean]("success").getOrElse(false)){
@@ -63,7 +58,7 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
                 case _: SocketException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket related error!"))
                 case _: TimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Connection timed out"))
                 case other =>
-                  apiLogger.error(other.getMessage)
+                  apiLogger.error(other.getMessage, other)
                   InternalServerError(views.html.err.InternalServerError())
 
               }

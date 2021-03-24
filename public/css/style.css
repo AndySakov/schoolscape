@@ -13421,10 +13421,13 @@ dl {
     color: black;
   }
 
-  tr {
-    &:hover {
-        cursor: pointer;
-    }
+  .special-link:hover {
+      text-decoration: none;
+      color: black;
+  }
+
+  tr:hover {
+     cursor: pointer;
   }
 
 /*# sourceMappingURL=style.css.map */
