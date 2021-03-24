@@ -26,7 +26,7 @@
 							@for(ass <- StudentApi.theory){
 								<tr>
 									<td>@ass.sub</td>
-									<td><a href="/dashboard/school/exam/theory/reply/@{s"${ass.stampy}".hashCode}" target="_blank">@ass.name</a></td>
+									<td><a href="/dashboard/school/exam/theory/reply/@{s"${ass.stampy}".hashCode}" target="_blank" class="special-link" >@ass.name</a></td>
 									<td>@ass.date</td>
 									<td>
 									@{ass.term match {
@@ -70,7 +70,7 @@
 							@for(obj <- StudentApi.objective){
 								<tr>
 									<td>@obj.sub</td>
-									<td><a href="/dashboard/school/exam/obj/reply/@{s"${obj.stampy}".hashCode}" target="_blank">@obj.name</a></td>
+									<td><a href="/dashboard/school/exam/obj/reply/@{s"${obj.stampy}".hashCode}" target="_blank" class="special-link" >@obj.name</a></td>
 									<td>@obj.date</td>
 									<td>
 									@{obj.term match {

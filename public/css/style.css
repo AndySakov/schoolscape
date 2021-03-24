@@ -13416,4 +13416,15 @@ dl {
   -ms-flex-positive: 1;
   flex-grow: 1; }
 
+  .special-link {
+    text-decoration: none;
+    color: black;
+  }
+
+  tr {
+    &:hover {
+        cursor: pointer;
+    }
+  }
+
 /*# sourceMappingURL=style.css.map */
