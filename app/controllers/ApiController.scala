@@ -25,16 +25,21 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
     "reason" -> reason
   }
 
+  type Body = Option[Map[String, Seq[String]]]
+
+  def body(implicit request: Request[AnyContent]): Body = {
+    request.body.asFormUrlEncoded
+  }
+
   var api: Api = NoneApi()
 
   def login: Action[AnyContent] = Action{
-    request: Request[AnyContent] => {
-      request.body.asFormUrlEncoded.map{
+    implicit request: Request[AnyContent] => {
+      body.map{
         args =>
           val user = args("user").head
           val pass = args("pass").head
           val role = args("role").head
-          updateRole(role)
           api = role match {
             case "student" => StudentApi()
             case "teacher" => TeacherApi()
@@ -62,8 +67,8 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
   }
 
   def signup: Action[AnyContent] = Action {
-    request: Request[AnyContent] => {
-      request.body.asFormUrlEncoded.map {
+    implicit request: Request[AnyContent] => {
+      body.map {
         args => {
           val formData = Map("full" -> args("full").head, "user" -> args("user").head, "class" -> args("class").head, "pass" -> args("pass").head)
           Try(jsonify(requests.post(url = CREATE_USER, data = formData).text).hcursor) match {
@@ -81,8 +86,8 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
     }
   }
   def editProfile: Action[AnyContent] = Action {
-    request: Request[AnyContent] => {
-      request.body.asFormUrlEncoded.map {
+    implicit request: Request[AnyContent] => {
+      body.map {
         args => {
           val formData = Map("oldUser" -> user.username, "name" -> args("name").head, "user" -> args("user").head, "pass" -> args("pass").head)
           Try(jsonify(requests.post(url = EDIT_USER, data = formData).text).hcursor) match {
@@ -92,12 +97,12 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
               case _: RequestFailedException => Redirect("/acccount/profile").flashing(flash("Unable to edit account!", "danger"): _*)
               case _ => InternalServerError(views.html.err.InternalServerError())
             }
-            case Success(result) =>
+            case Success(_) =>
               UserFactory.initUser(args("user").head, role)
               Redirect("/account/login").withNewSession.flashing(flash("Edited account successfully!", "success"): _*)
           }
         }
-      }.getOrElse(Redirect("/acccount/profile").flashing(flash("Unable to edit account!", "danger"): _*))
+      }.getOrElse(Redirect("/account/profile").flashing(flash("Unable to edit account!", "danger"): _*))
     }
   }
 }

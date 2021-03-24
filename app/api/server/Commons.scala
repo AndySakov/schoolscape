@@ -19,7 +19,7 @@ object Commons {
     List("notice" -> notice, "notice-type" -> s"alert-$ntype", "showing" -> "show")
   }
 
-  def md5( s: String): String = {
+  private def md5( s: String): String = {
     val md = MessageDigest.getInstance("MD5")
     val digest = md.digest(s.getBytes)
     val bigInt = new BigInteger(1,digest)
