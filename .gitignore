@@ -7,3 +7,4 @@ lib/
 project/metals.sbt
 target/
 project/target/
+project/project/
