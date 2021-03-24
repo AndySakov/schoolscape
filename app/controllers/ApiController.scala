@@ -6,6 +6,7 @@ import api.server.Commons._
 import api.server.{Api, NoneApi, StudentApi, TeacherApi}
 import javax.inject.{Inject, Singleton}
 import models.UserFactory
+import play.api.Logger
 import play.api.mvc._
 import requests.{RequestFailedException, TimeoutException}
 
@@ -24,6 +25,8 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
   def errFlash(reason: String): (String, String) = {
     "reason" -> reason
   }
+
+  val apiLogger: Logger = Logger(this.getClass)
 
   type Body = Option[Map[String, Seq[String]]]
 
@@ -59,7 +62,10 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
                 case _: SocketTimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket connection timed out!"))
                 case _: SocketException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket related error!"))
                 case _: TimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Connection timed out"))
-                case _ => InternalServerError(views.html.err.InternalServerError())
+                case _ =>
+                  apiLogger.info(_)
+                  InternalServerError(views.html.err.InternalServerError())
+
               }
           }
       }.getOrElse(Redirect("/error/login/failure"))
@@ -75,7 +81,9 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
             case Failure(exception) => exception match {
               case _: NoRouteToHostException => Redirect("/error/api/connect_failure").flashing(errFlash("Server unreachable"))
               case _: SocketTimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket connection timed out!"))
-              case _ => InternalServerError(views.html.err.InternalServerError())
+              case _ =>
+                apiLogger.info(_)
+                InternalServerError(views.html.err.InternalServerError())
             }
             case Success(result) =>
               if(result.get[Boolean]("success").getOrElse(false)) Redirect("/success/signup")
@@ -95,7 +103,9 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
               case _: NoRouteToHostException => Redirect("/error/api/connect_failure")
               case _: SocketTimeoutException => Redirect("/error/api/connect_failure")
               case _: RequestFailedException => Redirect("/acccount/profile").flashing(flash("Unable to edit account!", "danger"): _*)
-              case _ => InternalServerError(views.html.err.InternalServerError())
+              case _ =>
+                apiLogger.info(_)
+                InternalServerError(views.html.err.InternalServerError())
             }
             case Success(_) =>
               UserFactory.initUser(args("user").head, role)
