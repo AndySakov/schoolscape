@@ -62,8 +62,8 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
                 case _: SocketTimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket connection timed out!"))
                 case _: SocketException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket related error!"))
                 case _: TimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Connection timed out"))
-                case _ =>
-                  apiLogger.error(_)
+                case other =>
+                  apiLogger.error(other.getMessage)
                   InternalServerError(views.html.err.InternalServerError())
 
               }
@@ -81,8 +81,8 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
             case Failure(exception) => exception match {
               case _: NoRouteToHostException => Redirect("/error/api/connect_failure").flashing(errFlash("Server unreachable"))
               case _: SocketTimeoutException => Redirect("/error/api/connect_failure").flashing(errFlash("Socket connection timed out!"))
-              case _ =>
-                apiLogger.error(_)
+              case other =>
+                apiLogger.error(other.getMessage)
                 InternalServerError(views.html.err.InternalServerError())
             }
             case Success(result) =>
@@ -103,8 +103,8 @@ class ApiController @Inject()(cc: ControllerComponents) extends AbstractControll
               case _: NoRouteToHostException => Redirect("/error/api/connect_failure")
               case _: SocketTimeoutException => Redirect("/error/api/connect_failure")
               case _: RequestFailedException => Redirect("/acccount/profile").flashing(flash("Unable to edit account!", "danger"): _*)
-              case _ =>
-                apiLogger.error(_)
+              case other =>
+                apiLogger.error(other.getMessage)
                 InternalServerError(views.html.err.InternalServerError())
             }
             case Success(_) =>
